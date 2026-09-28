@@ -1,0 +1,6 @@
+{
+  "name": "Learn Path Flow",
+  "description": "Learn practical skills through structured courses designed to help you learn at your own pace, test your knowledge, and track your learning progress.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

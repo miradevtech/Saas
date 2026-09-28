@@ -1,0 +1,187 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile holding student account details and metadata",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the user matching their auth UID"
+        },
+        "name": {
+          "type": "string",
+          "description": "Full display name of the student"
+        },
+        "email": {
+          "type": "string",
+          "description": "User email address"
+        },
+        "title": {
+          "type": "string",
+          "description": "Custom student headline or bio title"
+        },
+        "avatarUrl": {
+          "type": "string",
+          "description": "Optional profile picture URL"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp of account creation"
+        }
+      },
+      "required": ["id", "name", "email", "createdAt"]
+    },
+    "Enrollment": {
+      "title": "Enrollment",
+      "description": "Course enrollment records tracking completed lessons and completion percentage",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique enrollment record ID"
+        },
+        "userId": {
+          "type": "string",
+          "description": "UID of the enrolled student"
+        },
+        "courseId": {
+          "type": "string",
+          "description": "Identifier of the course enrolled in"
+        },
+        "enrolledAt": {
+          "type": "string",
+          "description": "ISO timestamp when the course was enrolled"
+        },
+        "lastAccessedAt": {
+          "type": "string",
+          "description": "ISO timestamp when the course was last visited"
+        },
+        "completedLessonIds": {
+          "type": "array",
+          "description": "List of completed lesson IDs for this course"
+        },
+        "currentLessonId": {
+          "type": "string",
+          "description": "Current active lesson ID"
+        },
+        "progressPercent": {
+          "type": "number",
+          "description": "Progress percentage between 0 and 100"
+        },
+        "isCompleted": {
+          "type": "boolean",
+          "description": "Whether all course lessons have been finished"
+        },
+        "completedAt": {
+          "type": "string",
+          "description": "ISO timestamp when course was fully completed"
+        },
+        "quizScore": {
+          "type": "number",
+          "description": "Best quiz percentage achieved on this course"
+        }
+      },
+      "required": ["id", "userId", "courseId", "enrolledAt", "completedLessonIds", "progressPercent", "isCompleted"]
+    },
+    "QuizAttempt": {
+      "title": "QuizAttempt",
+      "description": "Log of a quiz attempt submitted by the student",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique quiz attempt record ID"
+        },
+        "userId": {
+          "type": "string",
+          "description": "UID of the student who took the quiz"
+        },
+        "courseId": {
+          "type": "string",
+          "description": "Identifier of the course the quiz belongs to"
+        },
+        "quizId": {
+          "type": "string",
+          "description": "Identifier of the quiz"
+        },
+        "score": {
+          "type": "number",
+          "description": "Number of correct answers"
+        },
+        "totalQuestions": {
+          "type": "number",
+          "description": "Total question count"
+        },
+        "scorePercent": {
+          "type": "number",
+          "description": "Score represented as percentage 0-100"
+        },
+        "passed": {
+          "type": "boolean",
+          "description": "Whether the passing threshold was achieved"
+        },
+        "attemptedAt": {
+          "type": "string",
+          "description": "ISO timestamp of the attempt"
+        }
+      },
+      "required": ["id", "userId", "courseId", "quizId", "score", "totalQuestions", "scorePercent", "passed", "attemptedAt"]
+    },
+    "LearningActivity": {
+      "title": "LearningActivity",
+      "description": "Auditable log of student milestones, lesson completions, and quiz submissions",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique activity log ID"
+        },
+        "userId": {
+          "type": "string",
+          "description": "UID of the student"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of learning milestone",
+          "enum": ["enrolled", "completed_lesson", "completed_quiz", "completed_course"]
+        },
+        "courseId": {
+          "type": "string",
+          "description": "Associated course ID"
+        },
+        "courseTitle": {
+          "type": "string",
+          "description": "Title of the course"
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable activity summary"
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "ISO timestamp of the event"
+        }
+      },
+      "required": ["id", "userId", "type", "courseId", "courseTitle", "detail", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Student profile document with identity details"
+    },
+    "/users/{userId}/enrollments/{enrollmentId}": {
+      "schema": "Enrollment",
+      "description": "Collection of course enrollments for the student"
+    },
+    "/users/{userId}/quizAttempts/{quizAttemptId}": {
+      "schema": "QuizAttempt",
+      "description": "Collection of quiz attempts completed by the student"
+    },
+    "/users/{userId}/activities/{activityId}": {
+      "schema": "LearningActivity",
+      "description": "Chronological learning activity stream for the student"
+    }
+  }
+}
